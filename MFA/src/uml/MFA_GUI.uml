@@ -1,0 +1,105 @@
+@startuml
+
+class Clients
+{
+    - {static} {final} CLIENTS_DATA_BASE : Map<String, String>
+
+    + {static} {final} verifyUsername(String) : boolean
+    + {static} {final} verifyPassword(String, String) : boolean
+}
+
+abstract class Platform_GUI
+{
+    # actionPerformedPassword(ActionEvent e) : void
+    # actionPerformedMail(ActionEvent e) : void
+    # actionPerformedSMS(ActionEvent e) : void
+    # actionPerformedExit(ActionEvent e) : void
+
+    + renderTitle() : void
+    + renderUsername() : void
+    + renderPassword() : void
+    + renderMethod() : void
+    + renderSucess() : void
+    + renderFail() : void
+}
+
+class Windows_GUI extends Platform_GUI
+{
+    + renderTitle() : void
+}
+
+class Linux_GUI extends Platform_GUI
+{
+    + renderTitle() : void
+}
+
+abstract class Authentification_Method
+{
+    # information : String
+    # code_sent : int
+    # code_entered : int
+
+    + isCorrectInformation(String) : boolean
+    + isCorrectCode(int code) : boolean
+
+    + getInformation() : void
+    + verifyInformation() : void
+
+    + get_code_sent() : int
+
+    + getCodeEntered() : int
+    + setCodeEntered(int code) : void
+
+    + getParameter() : String
+
+    + setInformation(String parameter) : void
+}
+
+class Mail_Code extends Authentification_Method
+{
+    + isCorrectInformation(String mail) : boolean
+
+    + getInformation() : void
+    + verifyInformation() : void
+}
+
+class SMS_Code extends Authentification_Method
+{
+    + isCorrectInformation(String mail) : boolean
+
+    + getInformation() : void
+    + verifyInformation() : void
+}
+
+abstract class Method_GUI
+{
+    + renderTitle() : void
+    # actionPerformedInformation(ActionEvent e) : void
+    + renderInformation() : void
+
+    # actionPerformedCode(ActionEvent e) : void
+    + renderCode() : void
+}
+
+class Mail_GUI extends Method_GUI
+{
+    + render renderTitle() : void
+    # actionPerformedInformation(ActionEvent e) : void
+    + renderInformation() : void
+}
+
+class SMS_GUI extends Method_GUI
+{
+    + render renderTitle() : void
+    # actionPerformedInformation(ActionEvent e) : void
+    + renderInformation() : void
+}
+
+class Main
+{
+
+}
+
+Main --O Clients
+
+@enduml

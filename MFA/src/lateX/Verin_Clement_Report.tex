@@ -1,0 +1,206 @@
+\documentclass[10pt,a4paper,oneside]{article}
+
+\usepackage{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{darkmode}
+
+\enabledarkmode
+
+\author{
+  Vérin Clément \\ \texttt{ISIMA, ZZ2 F1}
+  \and
+  Scrimieri Daniele \\ \texttt{BradFord University}
+}
+\title{SoftWare System Design and Testing \\ }
+
+\setlength{\parindent}{0pt}
+
+\hypersetup
+{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=cyan,
+  linkcolor=white
+}
+
+\begin{document}
+
+\fbox
+{
+  \parbox{\textwidth}
+  {
+    \centering
+    \maketitle
+  }
+}
+
+\vspace{1cm}
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=0.8\textwidth]{src/lateX/Captures/Title.png}
+    \caption{MFA is a commonly used and secured way to identify yourself}
+\end{figure}
+
+\begin{center}
+\href{https://bradford.instructure.com/courses/21719/assignments/114047} {Deposit Link}
+\end{center}
+
+\renewcommand{\contentsname}{Summary}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftdotsep}{2}
+
+\newpage
+
+\tableofcontents
+
+\section{Design}
+The first work's goal were about extending the previously implemented MFA, Multi-Factor-Authentification situation with an interactive GUI Interface.\\
+I recovered my last CourseWork 1 code and added 6 new classes entirely dedicated to GUI.\\
+
+Basically, these GUI classes are arranged into two types regarding what they are related with: Authentification Method GUI or Platform (or OS) GUI.\\
+
+The \textbf{Method\_GUI} and \textbf{Platform\_GUI} are two abstract classes providing the basics a GUI needs.\\
+Actually, I thought using abstract classes were the best because Authentification Methods and OS pretty have the same behaviour, so I managed to type a maximum of method in these abstract classes so actual sub-classes only have a few to Override.\\
+
+For example, what's make the difference between OS are only their name, and the type of required Identifcation feature for Authentification method (so Mail or Phone number).\\
+I assume this strategy allows a better flexibility, make the code opened to easy extension (\textit{Open Closed Pinciple}) and minimize code duplication.\\
+
+Besides, almost every class depends on interface or abstract classes, which follows the \textit{Interface Segregation Principle}.\\
+However, some classes still have more than one role or purpose which do not fully respects the \textit{Interface Responsibility Principle} from SOLID.\\
+
+\newpage
+Here is the resulting UML Diagram, which allows a better visual understanding :
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=1.2\textwidth]{src/uml/MFA\_GUI.png}
+    \caption{UML Diagram for MFA GUI extension}
+\end{figure}
+
+(if you got some troubles reading the diagram, you can find it in \textit{src/uml}).
+
+Of course, Iv'e adapted the original code by getting rid of Scanner(System.in) waiter, and I opted for CountDownLatch which allows us to stop a code and wait for the user to enter something from the GUI.\\
+I used \textit{Java Swing} but I still have some trouble with it: sometimes, when I update my evoluting \textit{JPanel}, new features doesn't shows up.\\
+The only solution for that is too set the visibility of the window to false, then true, and features will appear.
+
+\section{Implementation}
+You can check the \textit{makefile} in order to know wich possibility you've got.\\
+
+But you can just type \textit{make run\_GUI\_MFA} \textit{or java -cp target/classes MFA\_Terminal.Main}, and \textit{make run\_Terminal\_MFA} in order to run the original CourseWork1.\\
+You can also type \textit{make test} in order to launch the test series.\\
+
+You can find some documentation in the \textit{target/generated\_ressources/documentation} folder.\\
+
+\newpage
+Here is an example of what you could see running the GUI :
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=1.2\textwidth]{src/lateX/Captures/C1.png}
+    \caption{GUI Running with Windows OS and Mail code authentification method (Sucess)}
+\end{figure}
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=1.2\textwidth]{src/lateX/Captures/C2.png}
+    \caption{GUI Running with Linux OS and SMS code (or call resonding) authentification method (Failed)}
+\end{figure}
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=1.2\textwidth]{src/lateX/Captures/C3.png}
+    \caption{All the possible accounts you can use}
+\end{figure}
+
+\section{Questions}
+
+\subsection{A}
+Factory design is a pretty useful pattern which allows us to create classes or instances regardless their "types" or "specificities", bringing more flexibility and adaptability to our code.\\
+
+\textbf{Pros}:
+- The created class is himself Encapsulated: Client doesn’t need to know wihch exact class has been made or how it’s constructed.\\
+- "Easy Decoupling": differentiating class creators provide less tight coupling or strong dependencies.\\
+- Flexibility: Makes it easy to introduce new subclasses without changing client code (Open/Closed Principle from SOLID).
+- Ordering: all calsse's basic code is "centralized" in one place, enhancing flexibility.\\
+
+\textbf{Cons}:
+- Complexity: This pattern could introduce a lot of interface or abstract classes that may feel unnecessary for easy objects.\\
+- Override: Factory pattern could induce a lot of Overheading wich can make the work harder for both machine and developper.\\
+- Hard debugging: factory pattern can oftenly hide concrete classes, which can make Instantiation even harder sometimes.\\
+
+\textbf{When to use Factories}:
+The best situation to use factory pattern seems when the exact type of object to create is unknown until or during runtime.\\
+Or when a lot of versions of the same concept could exist (Example: Dishes in restaurant).\\
+
+\subsection{B}
+Dependencies represents the external components that a class or system relies on to operate (could be databases, APIs, utility classes, etc.)\\
+
+dependencies are important in software architecture because:\\
+- They define how modules communicate, interact and classify themselves.\\
+- Bad managed dependencies can lead to tight coupling, obligation to making changes, hard testing and re-usability.\\
+- Well managed dependencies improves modularity, scalability, and testability.\\
+
+We shall depend on abstract interfaces and not concrete implementations because SOLID: \textit{Dependency Inversion Principle}.\\
+"Depend on abstractions. Do not depend on concretions."
+
+Using abstract interfaces provides an better testability by knowing about dependencies during unit tests.\\
+Abstract interfaces as well enable us to use more polymorphism and composition.\\
+
+\section{Unit Testing}
+You can find test java source in \textit{src/test/java/SRC\_MFA\_TERMINAL\_TEST\_DIR} (which are the same than before, I did not figure how to properly test GUI features ...)\\
+You can as well find everything related to Jacoco Coverage in \textit{target/generated\_ressources/jacoco/jacoco-report}.\\
+
+You can also type \textit{make test} in order to launch the test series, or \textit{make coverage} to re-generate the Jacoco Coverage.\\
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=0.8\textwidth]{src/lateX/Captures/C4.png}
+    \caption{Jacoco Report}
+\end{figure}
+
+(The coverage is really really bad actually, because of untested GUI)
+
+\section{Mutation Testing}
+
+\subsection{A}
+For mutation Testing, I chose \textbf{PITEST}.\\
+
+In order ot use Pitest, I have downloaded 3 \textit{.jar file} containing every needed: \textit{pitest-1.15.2.jar, pitest-command-line-1.15.2.jar and pitest-entry-1.15.2.jar}.\\
+And only then, I can start launching Mutation programm by typing  \textit{make mutation} (this is a pretty big command line actually).
+
+The only problem is: Pitest keep saying "No mutators has been found" ...
+
+\begin{figure}[H]
+	\vspace{0cm}
+    \centering
+    \includegraphics[width=0.8\textwidth]{src/lateX/Captures/C5.png}
+    \caption{Pitest " No Mutation Find" exception}
+\end{figure}
+
+I tried a lot of solution. I don't think the issue comes from the source test.\\
+
+\subsection{B}
+\subsection{C}
+
+\section{Conclusion}
+{
+  This Coursework definitely improved my understanding of Java Swing, including some of his components and features.\\
+  But coding some Java Swing can take a lot of line to deal with, so it encouraged me to use a little bit more than usual Encapsulation Prinicples and Rules which drastically reduced the amount of code.\\
+
+  However, I still struggle to make godd and interesting test, but I am glad I learned about Coverage and Mutation programms which definitely can be useful in the future, even if I didn't manage to use Pitest.\\
+}
+\end{document}
